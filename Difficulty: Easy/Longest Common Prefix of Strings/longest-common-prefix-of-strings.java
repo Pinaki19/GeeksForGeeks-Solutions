@@ -20,28 +20,49 @@ class GFG {
 
 
 // User function Template for Java
-class Mycomp implements Comparator<String>{
-    public int compare(String s1,String s2){
-        return s1.length()-s2.length();
-    } ;
-    
+class Trie{
+  int numChild;
+  int set;
+  Trie child;
+  
+  Trie(){
+      numChild=0;
+      child=null;
+      set=-1;
+  }
 };
-
 class Solution {
     public String longestCommonPrefix(String arr[]) {
         // code here
-        Arrays.sort(arr,new Mycomp());
-        String ans=arr[0];
+        String ans="";
+        Trie head=new Trie();
+        
         for(String s:arr){
-            String t="";
-            for(int p=0;p<ans.length();p++){
-                if(ans.charAt(p)!=s.charAt(p)){
+            Trie temp=head;
+            for(int i=0;i<s.length();i++){
+                int t=(int)s.charAt(i)-'a';
+                if(temp.set==t){
+                    temp=temp.child;
+                    continue;
+                }
+                if(temp.numChild==0){
+                    temp.child=new Trie();
+                    temp.numChild=1;
+                    temp.set=t;
+                }else{
+                    temp.numChild+=1;
                     break;
                 }
-                t+=ans.charAt(p);
+                temp=temp.child;
             }
-            ans=t;
         }
+        
+        while(true){
+            if(head.numChild!=1) break;
+            ans+=(char)((int)'a'+head.set);
+            head=head.child;
+        }
+        
         return ans.length()==0? "-1":ans;
     }
 }
